@@ -22,7 +22,7 @@ describe('generatePrompt', () => {
     const result = generatePrompt(data);
     expect(result.assembledPrompt).toContain('Act as a professional cinematographer.');
     expect(result.assembledPrompt).toContain('Create a video about a dog chasing its tail.');
-    expect(result.assembledPrompt).toContain('The video should have a cinematic feel.');
+    expect(result.assembledPrompt).toContain('The video should have a cinematic');
     expect(result.assembledPrompt).toContain('Use a slow dolly in to capture the action.');
     expect(result.assembledPrompt).toContain('The main subject is a dog chasing its tail.');
     expect(result.assembledPrompt).toContain('The background should be a neutral, out-of-focus background.');

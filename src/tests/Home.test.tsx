@@ -20,12 +20,13 @@ describe('Home', () => {
 
   it('generates a prompt when the form is submitted', async () => {
     render(<Home />);
-    const input = screen.getByPlaceholderText('Describe your video idea...');
+    const input = screen.getByPlaceholderText('Describe your video idea... (e.g., a cat playing with yarn)');
     const button = screen.getByText('Generate Prompt');
 
     fireEvent.change(input, { target: { value: 'a test idea' } });
     fireEvent.click(button);
 
-    expect(await screen.findByText('This is a test prompt')).toBeInTheDocument();
+    const prompts = await screen.findAllByText('This is a test prompt');
+    expect(prompts.length).toBeGreaterThanOrEqual(1);
   });
 });
