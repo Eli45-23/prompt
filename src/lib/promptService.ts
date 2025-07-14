@@ -194,10 +194,18 @@ export const optimizePromptService = async (idea: string, model: string, current
 export const generateMagicStoryService = async (word: string, model: 'veo3' | 'flow' | 'runway' | 'pika'): Promise<{story: StoryExpansion, prompt: GeneratedPrompt}> => {
   if (!word) throw new Error('Word is required for Magic Mode');
 
+  console.log('Magic Service: Starting generation for word:', word, 'model:', model);
+  console.log('Magic Service: isStaticEnvironment:', isStaticEnvironment());
+  console.log('Magic Service: NODE_ENV:', process.env.NODE_ENV);
+  console.log('Magic Service: hostname:', typeof window !== 'undefined' ? window.location.hostname : 'server');
+
   if (isStaticEnvironment()) {
+    console.log('Magic Service: Using client-side OpenAI');
     // Use client-side OpenAI for static builds
     try {
+      console.log('Magic Service: Calling expandWordToStory...');
       const storyExpansion = await expandWordToStory(word, model);
+      console.log('Magic Service: Story expansion result:', storyExpansion);
       
       // Generate the final prompt using the expanded story
       const prompt = generateBasicPrompt({
@@ -212,12 +220,14 @@ export const generateMagicStoryService = async (word: string, model: 'veo3' | 'f
         negativePrompts: model === 'veo3' ? 'blurry, low-quality, subtitles, text overlay' : 'blurry, low-quality, cartoonish'
       });
 
+      console.log('Magic Service: Generated prompt:', prompt);
       return { story: storyExpansion, prompt };
     } catch (error) {
-      console.warn('AI story generation unavailable:', error);
-      throw new Error('Magic Mode unavailable in current environment');
+      console.error('Magic Service: AI story generation error:', error);
+      throw new Error(`Magic Mode error: ${error.message || 'OpenAI API unavailable'}`);
     }
   } else {
+    console.log('Magic Service: Using API route');
     // Use API route for server environments
     try {
       const response = await fetch('/api/magic-story', {
@@ -227,13 +237,14 @@ export const generateMagicStoryService = async (word: string, model: 'veo3' | 'f
       });
       
       if (!response.ok) {
-        throw new Error('Failed to generate magic story');
+        const errorData = await response.text();
+        throw new Error(`API error: ${response.status} - ${errorData}`);
       }
       
       return response.json();
     } catch (error) {
-      console.warn('API magic story unavailable:', error);
-      throw new Error('Magic Mode unavailable');
+      console.error('Magic Service: API error:', error);
+      throw new Error(`Magic Mode API error: ${error.message}`);
     }
   }
 };

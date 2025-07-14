@@ -13,8 +13,13 @@ const loadOpenAIShims = async () => {
 const getOpenAI = async () => {
   const apiKey = process.env.OPENAI_API_KEY || process.env.NEXT_PUBLIC_OPENAI_API_KEY;
   
+  console.log('OpenAI: Checking API key availability');
+  console.log('OpenAI: Server key exists:', !!process.env.OPENAI_API_KEY);
+  console.log('OpenAI: Client key exists:', !!process.env.NEXT_PUBLIC_OPENAI_API_KEY);
+  console.log('OpenAI: Environment:', typeof window !== 'undefined' ? 'browser' : 'server');
+  
   if (!apiKey) {
-    throw new Error('OpenAI API key not found');
+    throw new Error('OpenAI API key not found. Please set NEXT_PUBLIC_OPENAI_API_KEY for client-side usage.');
   }
   
   // Load appropriate shims first
@@ -22,6 +27,8 @@ const getOpenAI = async () => {
   
   // Dynamic import to avoid bundling issues
   const { default: OpenAI } = await import('openai');
+  
+  console.log('OpenAI: Creating instance with key length:', apiKey.length);
   
   return new OpenAI({
     apiKey,
