@@ -35,7 +35,7 @@ interface PromptData {
   negativePrompts?: string;
 }
 
-interface GeneratedPrompt {
+export interface GeneratedPrompt {
   rawTemplate: string;
   assembledPrompt: string;
 }

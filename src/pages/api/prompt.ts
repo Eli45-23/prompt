@@ -2,13 +2,14 @@
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { generatePrompt } from '@/lib/generatePrompt';
+import type { GeneratedPrompt } from '@/lib/generatePrompt';
 
 export const config = {
   runtime: 'edge',
 };
 
 // Simple in-memory cache and rate limiter
-const cache = new Map<string, { prompt: any; timestamp: number }>();
+const cache = new Map<string, { prompt: GeneratedPrompt; timestamp: number }>();
 const rateLimit = new Map<string, { count: number; lastReset: number }>();
 const CACHE_TTL = 60 * 1000; // 60 seconds
 const RATE_LIMIT_WINDOW = 10 * 1000; // 10 seconds
