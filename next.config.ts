@@ -1,18 +1,8 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  // Only use static export for production builds
-  ...(process.env.NODE_ENV === 'production' && {
-    output: 'export',
-    trailingSlash: true,
-    skipTrailingSlashRedirect: true,
-    distDir: 'out',
-    basePath: '/prompt',
-    assetPrefix: '/prompt/',
-  }),
-  images: {
-    unoptimized: true,
-  },
-};
-
-export default nextConfig;
+  const nextConfig: NextConfig = {
+    output: undefined, // Explicitly prevent static export
+    images: {
+      unoptimized: true,
+    },
+  };
