@@ -6,7 +6,6 @@ import {
   generateSuggestions, 
   refinePrompt, 
   analyzePromptQuality,
-  expandWordToStory,
   generateCinematicElements,
   generateStoryVariations,
   type StoryExpansion,
@@ -16,17 +15,13 @@ import {
 // Re-export types for external use
 export type { StoryExpansion, CinematicElements } from './openai';
 
-// Check if API routes are available by testing a call
-const checkApiAvailability = async (): Promise<boolean> => {
-  if (typeof window === 'undefined') return true; // Server-side has API routes
-  
-  try {
-    const response = await fetch('/api/health', { method: 'GET' });
-    return response.ok;
-  } catch {
-    return false; // API routes not available (static build)
-  }
+// Simple environment detection for legacy services
+const isStaticEnvironment = () => {
+  if (typeof window === 'undefined') return false; // Server-side
+  return process.env.NODE_ENV === 'production' && 
+         window.location.hostname.includes('github.io');
 };
+
 
 // Basic prompt generation (works in all environments)
 export const generatePromptService = async (params: {
