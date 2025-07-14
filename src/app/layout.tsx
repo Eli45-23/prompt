@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "PromptBuilder",
   description: "Generate prompts for Google Veo 3 and Flow",
-  manifest: "/manifest.json",
+  manifest: "/prompt/manifest.json",
   themeColor: "#2dd4bf",
 };
 
