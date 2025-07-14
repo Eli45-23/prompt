@@ -13,8 +13,10 @@
     "deploy": "npm run export && gh-pages -d out"
   },
   "dependencies": {
+    "framer-motion": "^11.15.0",
     "lucide-react": "^0.525.0",
     "next": "15.3.5",
+    "openai": "^4.73.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
