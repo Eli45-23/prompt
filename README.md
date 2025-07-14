@@ -1,4 +1,4 @@
-# PromptBuilder
+# prompt
 
 PromptBuilder is a full-stack web application that allows users to generate optimized video prompts for multiple AI video generation models including Google Veo 3, Flow, Runway, and Pika.
 
