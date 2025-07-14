@@ -14,13 +14,13 @@ global.fetch = jest.fn(() =>
 describe('Home', () => {
   it('renders the heading', () => {
     render(<Home />);
-    const heading = screen.getByText('PromptBuilder');
+    const heading = screen.getByText('AI PromptBuilder');
     expect(heading).toBeInTheDocument();
   });
 
   it('generates a prompt when the form is submitted', async () => {
     render(<Home />);
-    const input = screen.getByPlaceholderText('Describe your video idea... (e.g., a cat playing with yarn)');
+    const input = screen.getByPlaceholderText('Describe your amazing video concept...');
     const button = screen.getByText('Generate Prompt');
 
     fireEvent.change(input, { target: { value: 'a test idea' } });
