@@ -4,9 +4,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { generatePrompt } from '@/lib/generatePrompt';
 import type { GeneratedPrompt } from '@/lib/generatePrompt';
 
-export const config = {
-  runtime: 'edge',
-};
+// Remove edge runtime for now - use Node.js runtime instead
+// export const config = {
+//   runtime: 'edge',
+// };
 
 // Simple in-memory cache and rate limiter
 const cache = new Map<string, { prompt: GeneratedPrompt; timestamp: number }>();
