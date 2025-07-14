@@ -224,7 +224,8 @@ export const generateMagicStoryService = async (word: string, model: 'veo3' | 'f
       return { story: storyExpansion, prompt };
     } catch (error) {
       console.error('Magic Service: AI story generation error:', error);
-      throw new Error(`Magic Mode error: ${error.message || 'OpenAI API unavailable'}`);
+      const errorMessage = error instanceof Error ? error.message : 'OpenAI API unavailable';
+      throw new Error(`Magic Mode error: ${errorMessage}`);
     }
   } else {
     console.log('Magic Service: Using API route');
@@ -244,7 +245,8 @@ export const generateMagicStoryService = async (word: string, model: 'veo3' | 'f
       return response.json();
     } catch (error) {
       console.error('Magic Service: API error:', error);
-      throw new Error(`Magic Mode API error: ${error.message}`);
+      const errorMessage = error instanceof Error ? error.message : 'Unknown API error';
+      throw new Error(`Magic Mode API error: ${errorMessage}`);
     }
   }
 };
