@@ -1,13 +1,20 @@
-
 // /lib/generatePrompt.ts
 
-// This file contains the core logic for generating optimized video prompts
-// for Google's Veo 3 and Flow models.
+import { getVisualStyle } from './prompt-modules/visualStyle';
+import { getCameraMovement } from './prompt-modules/cameraMovement';
+import { getBackground } from './prompt-modules/background';
+import { getLightingMood } from './prompt-modules/lightingMood';
+import { getAudioCues } from './prompt-modules/audioCues';
+import { getColorPalette } from './prompt-modules/colorPalette';
+import { getNegativePrompts } from './prompt-modules/negativePrompts';
 
-// To update the prompt templates, modify the `veo3Template` and `flowTemplate`
-// strings below. The templates are designed to be easily extensible.
-// When new features or best practices are introduced, you can add new
-// sections to the templates.
+// This file contains the core logic for generating optimized video prompts
+// for Google's Veo 3 and Flow models, and other platforms like Runway and Pika.
+
+// To update the prompt templates, modify the `veo3Template`, `flowTemplate`,
+// `runwayTemplate`, and `pikaTemplate` strings below. The templates are designed
+// to be easily extensible. When new features or best practices are introduced,
+// you can add new sections to the templates.
 
 // For example, if a new parameter for controlling the "emotional tone" is
 // added, you could add a new line to the templates like:
@@ -18,7 +25,14 @@
 
 interface PromptData {
   idea: string;
-  model: 'veo3' | 'flow';
+  model: 'veo3' | 'flow' | 'runway' | 'pika';
+  visualStyle?: string;
+  cameraMovement?: string;
+  background?: string;
+  lightingMood?: string;
+  audioCues?: string;
+  colorPalette?: string;
+  negativePrompts?: string;
 }
 
 interface GeneratedPrompt {
@@ -28,7 +42,7 @@ interface GeneratedPrompt {
 
 const veo3Template = `
 Scene: A high-quality, cinematic shot of {idea}.
-Visual Style: {visual_style}, 8k, sharp focus, high contrast.
+Visual Style: {visual_style}.
 Camera Movement: {camera_movement}.
 Main Subject: A detailed view of {idea}.
 Background: {background}.
@@ -51,32 +65,60 @@ The color palette should be {color_palette}.
 Avoid the following: {negative_prompts}.
 `;
 
-// This is a placeholder for a more sophisticated logic that could
-// be used to generate the different parts of the prompt.
-// For now, we will use some default values.
-const promptFragments = {
-  visual_style: 'cinematic',
-  camera_movement: 'slow dolly in',
-  background: 'a neutral, out-of-focus background',
-  lighting_mood: 'dramatic, with a single key light',
-  audio_cues: 'a subtle, ambient soundtrack',
-  color_palette: 'a muted, desaturated color palette',
-  negative_prompts: 'blurry, low-quality, cartoonish',
-};
+const runwayTemplate = `
+Generate a video using RunwayML.
+Concept: {idea}.
+Style: {visual_style}.
+Camera: {camera_movement}.
+Environment: {background}.
+Atmosphere: {lighting_mood}.
+Sound: {audio_cues}.
+Colors: {color_palette}.
+Exclude: {negative_prompts}.
+`;
+
+const pikaTemplate = `
+Create a video with Pika Labs.
+Subject: {idea}.
+Visuals: {visual_style}.
+Motion: {camera_movement}.
+Setting: {background}.
+Illumination: {lighting_mood}.
+Audio: {audio_cues}.
+Color Scheme: {color_palette}.
+Undesired: {negative_prompts}.
+`;
 
 export function generatePrompt(data: PromptData): GeneratedPrompt {
-  const { idea, model } = data;
-  const template = model === 'veo3' ? veo3Template : flowTemplate;
+  const { idea, model, ...customFragments } = data;
+  let template: string;
+
+  switch (model) {
+    case 'veo3':
+      template = veo3Template;
+      break;
+    case 'flow':
+      template = flowTemplate;
+      break;
+    case 'runway':
+      template = runwayTemplate;
+      break;
+    case 'pika':
+      template = pikaTemplate;
+      break;
+    default:
+      template = veo3Template; // Fallback
+  }
 
   const assembledPrompt = template
     .replace(/{idea}/g, idea)
-    .replace(/{visual_style}/g, promptFragments.visual_style)
-    .replace(/{camera_movement}/g, promptFragments.camera_movement)
-    .replace(/{background}/g, promptFragments.background)
-    .replace(/{lighting_mood}/g, promptFragments.lighting_mood)
-    .replace(/{audio_cues}/g, promptFragments.audio_cues)
-    .replace(/{color_palette}/g, promptFragments.color_palette)
-    .replace(/{negative_prompts}/g, promptFragments.negative_prompts);
+    .replace(/{visual_style}/g, getVisualStyle(customFragments.visualStyle))
+    .replace(/{camera_movement}/g, getCameraMovement(customFragments.cameraMovement))
+    .replace(/{background}/g, getBackground(customFragments.background))
+    .replace(/{lighting_mood}/g, getLightingMood(customFragments.lightingMood))
+    .replace(/{audio_cues}/g, getAudioCues(customFragments.audioCues))
+    .replace(/{color_palette}/g, getColorPalette(customFragments.colorPalette))
+    .replace(/{negative_prompts}/g, getNegativePrompts(customFragments.negativePrompts));
 
   return {
     rawTemplate: template,

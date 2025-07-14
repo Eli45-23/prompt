@@ -1,13 +1,21 @@
 # PromptBuilder
 
-PromptBuilder is a full-stack web application that allows users to generate optimized video prompts for Google Veo 3 and Flow models based on a simple concept.
+PromptBuilder is a full-stack web application that allows users to generate optimized video prompts for multiple AI video generation models including Google Veo 3, Flow, Runway, and Pika.
+
+🌐 **Live Demo**: [https://Eli45-23.github.io/prompt](https://Eli45-23.github.io/prompt)
 
 ## Features
 
-- Generate prompts for Google Veo 3 and Flow.
-- Simple and intuitive user interface.
-- Copy generated prompts to clipboard.
-- Built with Next.js, TypeScript, and Tailwind CSS.
+- **Multi-Model Support**: Generate prompts for Veo 3, Flow, Runway, and Pika
+- **Live Preview**: Real-time prompt updates as you type and adjust parameters
+- **Advanced Customization**: Fine-tune visual style, camera movement, lighting, audio, and more
+- **Template Library**: Built-in templates for quick start
+- **History & Favorites**: Save and organize your generated prompts
+- **Export & Sharing**: Export to Markdown, copy shareable links
+- **AI Refinement**: Refine prompts with AI assistance
+- **Dark/Light Mode**: Toggle between themes
+- **PWA Support**: Offline functionality and mobile app experience
+- **Glass Morphism UI**: Modern, beautiful interface with neon gradients
 
 ## Getting Started
 
@@ -92,16 +100,55 @@ npm test
 # or yarn test
 ```
 
-## CI/CD
+## Deployment
 
-This project uses GitHub Actions for continuous integration and deployment. The workflow is defined in `.github/workflows/ci.yml`.
+### GitHub Pages (Current)
 
-- **Linting and Type-checking**: Ensures code quality and type safety.
-- **Testing**: Runs unit and UI tests.
-- **Deployment**: Deploys the application to Vercel on push to the `main` branch.
+This project is automatically deployed to GitHub Pages using GitHub Actions. The workflow is defined in `.github/workflows/ci.yml`.
 
-To enable Vercel deployment, you need to set the following secrets in your GitHub repository:
+**Live URL**: [https://Eli45-23.github.io/prompt](https://Eli45-23.github.io/prompt)
 
-- `VERCEL_TOKEN`
-- `VERCEL_ORG_ID`
-- `VERCEL_PROJECT_ID`
+#### Manual Deployment
+
+To manually deploy to GitHub Pages:
+
+```bash
+npm run deploy
+```
+
+This will build the project and push the static files to the `gh-pages` branch.
+
+#### Setting up GitHub Pages
+
+1. Go to your repository settings on GitHub
+2. Navigate to "Pages" in the left sidebar
+3. Under "Source", select "Deploy from a branch"
+4. Choose "gh-pages" branch and "/ (root)" folder
+5. Save the settings
+
+### Local Development Deployment
+
+For local testing of the production build:
+
+```bash
+npm run build
+npm run start
+```
+
+## CI/CD Pipeline
+
+The GitHub Actions workflow includes:
+
+- **Code Quality**: Linting and type-checking with ESLint and TypeScript
+- **Testing**: Unit and integration tests with Jest and React Testing Library
+- **Build**: Next.js static export optimized for GitHub Pages
+- **Deploy**: Automatic deployment to GitHub Pages on push to `main` branch
+
+## Environment Variables
+
+Create a `.env.local` file for local development:
+
+```bash
+# Optional: For future API integrations
+NEXT_PUBLIC_API_URL=your_api_url_here
+```
