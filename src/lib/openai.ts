@@ -1,8 +1,19 @@
+import 'openai/shims/node';
 import OpenAI from 'openai';
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+// Create OpenAI instance that works in both server and client environments
+const getOpenAI = () => {
+  const apiKey = process.env.OPENAI_API_KEY || process.env.NEXT_PUBLIC_OPENAI_API_KEY;
+  
+  if (!apiKey) {
+    throw new Error('OpenAI API key not found');
+  }
+  
+  return new OpenAI({
+    apiKey,
+    dangerouslyAllowBrowser: typeof window !== 'undefined', // Allow browser usage
+  });
+};
 
 export interface PromptOptimizationRequest {
   idea: string;
@@ -56,6 +67,7 @@ ${request.currentPrompt ? `Current prompt: "${request.currentPrompt}"` : ''}
 Please optimize this for ${request.model} and provide 3 alternative suggestions with quality scores.`;
 
   try {
+    const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -81,6 +93,7 @@ export async function generateSuggestions(input: string): Promise<string[]> {
   const systemPrompt = `You are a creative AI that suggests video ideas. Given a partial input, suggest 5 creative, specific video concepts that complete or expand on the idea. Keep suggestions concise (under 15 words each).`;
 
   try {
+    const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
@@ -108,6 +121,7 @@ export async function refinePrompt(prompt: string, model: string): Promise<strin
 Return only the 3 refined prompts, one per line.`;
 
   try {
+    const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
       model: "gpt-4o",
       messages: [
@@ -136,6 +150,7 @@ Focus on: clarity, specificity, visual appeal, technical accuracy, creativity.
 Respond with JSON: {"score": 85, "feedback": ["point 1", "point 2"]}`;
 
   try {
+    const openai = getOpenAI();
     const completion = await openai.chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
