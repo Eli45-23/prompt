@@ -17,9 +17,13 @@ const getOpenAI = async () => {
   console.log('OpenAI: Server key exists:', !!process.env.OPENAI_API_KEY);
   console.log('OpenAI: Client key exists:', !!process.env.NEXT_PUBLIC_OPENAI_API_KEY);
   console.log('OpenAI: Environment:', typeof window !== 'undefined' ? 'browser' : 'server');
+  console.log('OpenAI: All env vars:', Object.keys(process.env).filter(key => key.includes('OPENAI')));
   
   if (!apiKey) {
-    throw new Error('OpenAI API key not found. Please set NEXT_PUBLIC_OPENAI_API_KEY for client-side usage.');
+    const errorMsg = typeof window !== 'undefined' 
+      ? 'OpenAI API key not found. Please set NEXT_PUBLIC_OPENAI_API_KEY in GitHub repository secrets for Magic Mode to work.'
+      : 'OpenAI API key not found. Please set OPENAI_API_KEY or NEXT_PUBLIC_OPENAI_API_KEY.';
+    throw new Error(errorMsg);
   }
   
   // Load appropriate shims first
