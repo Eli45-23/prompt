@@ -5,8 +5,16 @@ import {
   optimizePrompt, 
   generateSuggestions, 
   refinePrompt, 
-  analyzePromptQuality 
+  analyzePromptQuality,
+  expandWordToStory,
+  generateCinematicElements,
+  generateStoryVariations,
+  type StoryExpansion,
+  type CinematicElements
 } from './openai';
+
+// Re-export types for external use
+export type { StoryExpansion, CinematicElements } from './openai';
 
 // Detect if we're in a static environment (no API routes available)
 const isStaticEnvironment = () => {
@@ -178,6 +186,117 @@ export const optimizePromptService = async (idea: string, model: string, current
     } catch (error) {
       console.warn('API optimization unavailable:', error);
       return {};
+    }
+  }
+};
+
+// Magic Mode: One-word story generation service
+export const generateMagicStoryService = async (word: string, model: 'veo3' | 'flow' | 'runway' | 'pika'): Promise<{story: StoryExpansion, prompt: GeneratedPrompt}> => {
+  if (!word) throw new Error('Word is required for Magic Mode');
+
+  if (isStaticEnvironment()) {
+    // Use client-side OpenAI for static builds
+    try {
+      const storyExpansion = await expandWordToStory(word, model);
+      
+      // Generate the final prompt using the expanded story
+      const prompt = generateBasicPrompt({
+        idea: storyExpansion.fullStory,
+        model,
+        visualStyle: storyExpansion.visualStyle,
+        cameraMovement: storyExpansion.cameraMovement,
+        background: storyExpansion.background,
+        lightingMood: storyExpansion.lightingMood,
+        audioCues: storyExpansion.audioCues,
+        colorPalette: storyExpansion.colorPalette,
+        negativePrompts: model === 'veo3' ? 'blurry, low-quality, subtitles, text overlay' : 'blurry, low-quality, cartoonish'
+      });
+
+      return { story: storyExpansion, prompt };
+    } catch (error) {
+      console.warn('AI story generation unavailable:', error);
+      throw new Error('Magic Mode unavailable in current environment');
+    }
+  } else {
+    // Use API route for server environments
+    try {
+      const response = await fetch('/api/magic-story', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ word, model }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to generate magic story');
+      }
+      
+      return response.json();
+    } catch (error) {
+      console.warn('API magic story unavailable:', error);
+      throw new Error('Magic Mode unavailable');
+    }
+  }
+};
+
+// Generate story variations service
+export const generateStoryVariationsService = async (originalStory: string, model: string): Promise<string[]> => {
+  if (!originalStory) return [];
+
+  if (isStaticEnvironment()) {
+    // Use client-side OpenAI for static builds
+    try {
+      return await generateStoryVariations(originalStory, model);
+    } catch (error) {
+      console.warn('AI story variations unavailable:', error);
+      return [];
+    }
+  } else {
+    // Use API route for server environments
+    try {
+      const response = await fetch('/api/story-variations', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ story: originalStory, model }),
+      });
+      
+      if (!response.ok) return [];
+      
+      const data = await response.json();
+      return data.variations || [];
+    } catch (error) {
+      console.warn('API story variations unavailable:', error);
+      return [];
+    }
+  }
+};
+
+// Enhanced cinematic elements generation service
+export const generateCinematicElementsService = async (storyContext: string, model: 'veo3' | 'flow' | 'runway' | 'pika'): Promise<CinematicElements | null> => {
+  if (!storyContext) return null;
+
+  if (isStaticEnvironment()) {
+    // Use client-side OpenAI for static builds
+    try {
+      return await generateCinematicElements(storyContext, model);
+    } catch (error) {
+      console.warn('AI cinematic elements unavailable:', error);
+      return null;
+    }
+  } else {
+    // Use API route for server environments
+    try {
+      const response = await fetch('/api/cinematic-elements', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ storyContext, model }),
+      });
+      
+      if (!response.ok) return null;
+      
+      return response.json();
+    } catch (error) {
+      console.warn('API cinematic elements unavailable:', error);
+      return null;
     }
   }
 };

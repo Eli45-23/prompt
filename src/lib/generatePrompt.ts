@@ -41,52 +41,19 @@ export interface GeneratedPrompt {
 }
 
 const veo3Template = `
-Scene: A high-quality, cinematic shot of {idea}.
-Visual Style: {visual_style}.
-Camera Movement: {camera_movement}.
-Main Subject: A detailed view of {idea}.
-Background: {background}.
-Lighting and Mood: {lighting_mood}.
-Audio Cues: {audio_cues}.
-Color Palette: {color_palette}.
-Negative Prompts: {negative_prompts}.
+{idea}. {visual_style} cinematography with {camera_movement}. {background} with {lighting_mood}. {audio_cues}. {color_palette}. Professional 8-second cinematic shot with realistic physics and character consistency. No subtitles, no text overlay. {negative_prompts}.
 `;
 
 const flowTemplate = `
-Act as a professional cinematographer.
-Create a video about {idea}.
-The video should have a {visual_style} feel.
-Use a {camera_movement} to capture the action.
-The main subject is {idea}.
-The background should be {background}.
-The lighting should be {lighting_mood}.
-The audio should consist of {audio_cues}.
-The color palette should be {color_palette}.
-Avoid the following: {negative_prompts}.
+Professional cinematic filmmaking: {idea}. {visual_style} aesthetic with advanced {camera_movement}. {background} setting with {lighting_mood}. {audio_cues}. {color_palette}. Use ingredients-based composition with modular elements. Focus on cinematic language: match cuts, establishing shots, and sophisticated camera work. 8-second professional filmmaking quality. Avoid: {negative_prompts}.
 `;
 
 const runwayTemplate = `
-Generate a video using RunwayML.
-Concept: {idea}.
-Style: {visual_style}.
-Camera: {camera_movement}.
-Environment: {background}.
-Atmosphere: {lighting_mood}.
-Sound: {audio_cues}.
-Colors: {color_palette}.
-Exclude: {negative_prompts}.
+{idea}. {visual_style} style with {camera_movement}. {background} environment, {lighting_mood}. {audio_cues}. {color_palette}. High-quality cinematic video optimized for RunwayML generation. Avoid: {negative_prompts}.
 `;
 
 const pikaTemplate = `
-Create a video with Pika Labs.
-Subject: {idea}.
-Visuals: {visual_style}.
-Motion: {camera_movement}.
-Setting: {background}.
-Illumination: {lighting_mood}.
-Audio: {audio_cues}.
-Color Scheme: {color_palette}.
-Undesired: {negative_prompts}.
+{idea}. {visual_style} with creative {camera_movement}. {background}, {lighting_mood}. {audio_cues}. {color_palette}. Engaging visual effects and motion optimized for Pika Labs. Avoid: {negative_prompts}.
 `;
 
 export function generatePrompt(data: PromptData): GeneratedPrompt {
