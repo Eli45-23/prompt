@@ -1,17 +1,19 @@
 
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "@/styles/globals.css";
+ import type { Metadata, Viewport } from "next";
+  import { Inter } from "next/font/google";
+  import "@/styles/globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+  const inter = Inter({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "PromptBuilder",
-  description: "Generate prompts for Google Veo 3 and Flow",
-  manifest: "/prompt/manifest.json",
-  themeColor: "#2dd4bf",
-};
+  export const metadata: Metadata = {
+    title: "PromptBuilder",
+    description: "Generate prompts for Google Veo 3 and Flow",
+    manifest: "/manifest.json",  // ← Change this line (remove /prompt)
+  };
 
+  export const viewport: Viewport = {
+    themeColor: "#2dd4bf",
+  };
 export default function RootLayout({
   children,
 }: Readonly<{
