@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PromptBuilder
+
+PromptBuilder is a full-stack web application that allows users to generate optimized video prompts for Google Veo 3 and Flow models based on a simple concept.
+
+## Features
+
+- Generate prompts for Google Veo 3 and Flow.
+- Simple and intuitive user interface.
+- Copy generated prompts to clipboard.
+- Built with Next.js, TypeScript, and Tailwind CSS.
 
 ## Getting Started
 
-First, run the development server:
+Follow these instructions to set up and run the project locally.
+
+### Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+
+### Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/your-username/promptbuilder.git
+   cd promptbuilder
+   ```
+
+2. Install dependencies:
+
+   ```bash
+   npm install
+   # or yarn install
+   ```
+
+3. Create a `.env.local` file in the root directory and add your API key:
+
+   ```
+   PROMPT_ENGINE_API_KEY=your_api_key_here
+   ```
+
+   Replace `your_api_key_here` with your actual API key for calling a prompt-engine service.
+
+### Running the Development Server
+
+To run the application in development mode:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# or yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Building for Production
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+To build the application for production:
 
-## Learn More
+```bash
+npm run build
+# or yarn build
+```
 
-To learn more about Next.js, take a look at the following resources:
+### Running Production Build
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To start the production server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm run start
+# or yarn start
+```
 
-## Deploy on Vercel
+## How to Update Prompt Templates
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The prompt templates are located in `src/lib/generatePrompt.ts`. You can modify the `veo3Template` and `flowTemplate` strings to update the prompt generation logic. The templates are designed to be easily extensible. When new features or best practices are introduced, you can add new sections to the templates.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+For example, if a new parameter for controlling the "emotional tone" is added, you could add a new line to the templates like:
+
+```
+Emotional Tone: {emotional_tone}
+```
+
+Then, you would need to update the `promptFragments` object and the `generatePrompt` function to handle the new parameter.
+
+## Testing
+
+To run the tests:
+
+```bash
+npm test
+# or yarn test
+```
+
+## CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment. The workflow is defined in `.github/workflows/ci.yml`.
+
+- **Linting and Type-checking**: Ensures code quality and type safety.
+- **Testing**: Runs unit and UI tests.
+- **Deployment**: Deploys the application to Vercel on push to the `main` branch.
+
+To enable Vercel deployment, you need to set the following secrets in your GitHub repository:
+
+- `VERCEL_TOKEN`
+- `VERCEL_ORG_ID`
+- `VERCEL_PROJECT_ID`
